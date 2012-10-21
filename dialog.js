@@ -172,7 +172,7 @@ var Dialog = function (window, document, Clickable) {
 			dialog.appendChild(text);
 		}
 
-		if (options.successButton || options.cancelButton) {
+		if (options.success || options.cancel) {
 			var buttons = document.createElement('div');
 			buttons.style.padding = '12px 0';
 			buttons.style.margin  = '0';
@@ -184,21 +184,21 @@ var Dialog = function (window, document, Clickable) {
 			buttons.style.backgroundImage = 'linear-gradient(top, rgba(24,26,31, 0.97), rgba(20,22,28, 0.97))';
 			dialog.appendChild(buttons);
 
-			if (options.successButton) {
+			if (options.success) {
 				var successButton = createButton(function () {
 					callback(true);
 				});
-				successButton.textContent = options.successButton || 'Ok';
+				successButton.textContent = options.success || 'Ok';
 			}
 
-			if (options.cancelButton) {
+			if (options.cancel) {
 				var cancelButton = createButton(function () {
 					callback(false);
 				});
-				cancelButton.textContent = options.cancelButton || 'Cancel';
+				cancelButton.textContent = options.cancel || 'Cancel';
 			}
 
-			if (options.successButton && options.cancelButton) {
+			if (options.success && options.cancel) {
 				successButton.style.width      = '44%';
 				successButton.style['float']   = 'right';
 				successButton.style.marginLeft = '0';
@@ -208,10 +208,10 @@ var Dialog = function (window, document, Clickable) {
 				cancelButton.style.marginRight = '0';
 			}
 
-			if (options.cancelButton) {
+			if (options.cancel) {
 				buttons.appendChild(cancelButton);
 			}
-			if (options.successButton) {
+			if (options.success) {
 				buttons.appendChild(successButton);
 			}
 
@@ -364,28 +364,28 @@ var Dialog = function (window, document, Clickable) {
 			throw TypeError('dialog text must a string, got ' + options.text);
 		}
 
-		switch (typeof options.successButton) {
+		switch (typeof options.success) {
 			case 'string':
 				break;
 
 			case 'undefined':
-				options.successButton = 'Ok';
+				options.success = 'Ok';
 				break;
 
 			default:
-				throw TypeError('success button must a string if defined, got ' + options.successButton);
+				throw TypeError('success button must a string if defined, got ' + options.success);
 		}
 
-		switch (typeof options.cancelButton) {
+		switch (typeof options.cancel) {
 			case 'string':
 				break;
 
 			case 'undefined':
-				options.cancelButton = '';
+				options.cancel = '';
 				break;
 
 			default:
-				throw TypeError('cancel button must a string if defined, got ' + options.cancelButton);
+				throw TypeError('cancel button must a string if defined, got ' + options.cancel);
 		}
 
 		switch (typeof callback) {
