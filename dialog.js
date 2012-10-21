@@ -24,7 +24,6 @@ var Dialog = function (window, document, Clickable) {
 
 	function createButton (callback) {
 		var button = document.createElement('div');
-		button.className = 'app-button';
 
 		button.style.margin                   = '0 4%';
 		button.style.padding                  = '12px 0';
@@ -35,6 +34,7 @@ var Dialog = function (window, document, Clickable) {
 		button.style[   '-webkit-box-sizing'] = 'border-box';
 		button.style[      '-moz-box-sizing'] = 'border-box';
 		button.style[           'box-sizing'] = 'border-box';
+		button.style.color                    = '#FFF';
 		button.style.fontSize                 = '18px';
 		button.style.fontWeight               = 'bold';
 		button.style.lineHeight               = '20px';
@@ -42,10 +42,21 @@ var Dialog = function (window, document, Clickable) {
 		button.style.textAlign                = 'center';
 
 		if (platform === 'ios') {
+			//TODO: gradient
+			button.style.backgroundImage          = '-webkit-linear-gradient(top, #3D3E45, #191A22)';
+			button.style['-webkit-box-shadow']    = 'inset 0 1px 1px #5C5E63';
+			button.style[   '-moz-box-shadow']    = 'inset 0 1px 1px #5C5E63';
+			button.style[        'box-shadow']    = 'inset 0 1px 1px #5C5E63';
 			button.style['-webkit-border-radius'] = '6px';
 			button.style[   '-moz-border-radius'] = '6px';
 			button.style[        'border-radius'] = '6px';
 		}
+		else {
+			//TODO: gradient
+			button.style.backgroundImage = '-webkit-linear-gradient(top, #3D3E45, #15171D)';
+		}
+
+		//TODO: downstates
 
 		Clickable && Clickable(button);
 		button.addEventListener('click', callback, false);
@@ -55,22 +66,25 @@ var Dialog = function (window, document, Clickable) {
 
 	function createDialog (options, callback) {
 		var dialogContainer = document.createElement('div');
-		dialogContainer.className = 'app-dialog-container';
-		dialogContainer.style.position   = 'absolute';
+		dialogContainer.style.position   = 'fixed';
 		dialogContainer.style.zIndex     = '5000';
 		dialogContainer.style.top        = '0';
 		dialogContainer.style.left       = '0';
+		dialogContainer.style.margin     = '0';
+		dialogContainer.style.padding    = '0';
 		dialogContainer.style.height     = '100%';
 		dialogContainer.style.width      = '100%';
 		dialogContainer.style.background = 'rgba(0,0,0, 0.8)';
+		dialogContainer.style.overflow   = 'hidden';
 
 		dialogContainer.addEventListener('touchstart', preventDefault, false);
 
 		var dialog = document.createElement('div');
-		dialog.className = 'app-dialog';
 		dialog.style.position              = 'absolute';
 		dialog.style.bottom                = '0';
 		dialog.style.left                  = '0';
+		dialog.style.margin                = '0';
+		dialog.style.padding               = '0';
 		dialog.style.width                 = '100%';
 		dialog.style.background            = '#000';
 		dialog.style.borderTop             = '1px solid rgba(124,125,127, 0.2)';
@@ -78,14 +92,22 @@ var Dialog = function (window, document, Clickable) {
 		dialog.style[   '-moz-box-shadow'] = '0 -1px 3px rgba(0,0,0, 0.5)';
 		dialog.style[        'box-shadow'] = '0 -1px 3px rgba(0,0,0, 0.5)';
 		dialog.style.color                 = '#FFF';
+
+		if (platform === 'android') {
+			dialog.style.fontFamily = '"Roboto", sans-serif';
+		}
+		else {
+			dialog.style.fontFamily = '"Helvetica Neue", Helvetica, Arial, sans-serif';
+		}
+
 		dialogContainer.appendChild(dialog);
 
 		if (options.title) {
 			var title = document.createElement('div');
-			title.className   = 'app-title';
 			title.textContent = options.title;
 			title.style.position              = 'relative';
 			title.style.padding               = '12px 8px';
+			title.style.margin                = '0';
 			title.style.background            = 'rgba(26,27,31, 0.97)';
 			title.style.borderBottom          = '1px solid rgba(18,18,21, 0.97)';
 			title.style['-webkit-box-shadow'] = '0 1px 0 rgba(49,50,55, 0.97)';
@@ -100,9 +122,9 @@ var Dialog = function (window, document, Clickable) {
 
 		if (options.text) {
 			var text = document.createElement('div');
-			text.className   = 'app-text';
 			text.textContent = options.text;
 			text.style.padding         = '12px 32px 0';
+			text.style.margin          = '0';
 			//TODO: gradient
 			text.style.backgroundImage = '-webkit-linear-gradient(top, rgba(27,29,34, 0.97), rgba(24,26,31, 0.97))';
 			text.style.color           = '#A6A7A9';
@@ -114,8 +136,8 @@ var Dialog = function (window, document, Clickable) {
 
 		if (options.successButton || options.cancelButton) {
 			var buttons = document.createElement('div');
-			buttons.className = 'app-buttons';
 			buttons.style.padding = '12px 0';
+			buttons.style.margin  = '0';
 			//TODO: gradient
 			buttons.style.backgroundImage = '-webkit-linear-gradient(top, rgba(24,26,31, 0.97), rgba(20,22,28, 0.97))';
 			dialog.appendChild(buttons);
@@ -152,7 +174,9 @@ var Dialog = function (window, document, Clickable) {
 			}
 
 			var clear = document.createElement('div');
-			clear.className = 'clear';
+			clear.style.margin  = '0';
+			clear.style.padding = '0';
+			clear.style.clear   = 'both';
 			buttons.appendChild(clear);
 		}
 
@@ -175,7 +199,17 @@ var Dialog = function (window, document, Clickable) {
 			}
 			dialogLock = true;
 
-			dialog.style.opacity = '0';
+			if (platform === 'ios') {
+				dialog.style.background = 'rgba(0,0,0, 0)';
+				innerDialog.style['-webkit-transform'] = 'translate3d(0,100%,0)';
+				innerDialog.style[   '-moz-transform'] = 'translate3d(0,100%,0)';
+				innerDialog.style[    '-ms-transform'] = 'translate3d(0,100%,0)';
+				innerDialog.style[     '-o-transform'] = 'translate3d(0,100%,0)';
+				innerDialog.style[        'transform'] = 'translate3d(0,100%,0)';
+			}
+			else {
+				dialog.style.opacity = '0';
+			}
 
 			setTimeout(function () {
 				processDialogQueue();
@@ -189,21 +223,56 @@ var Dialog = function (window, document, Clickable) {
 				catch (err) {}
 			}, 600);
 		});
+		var innerDialog = dialog.firstChild;
 
-		dialog.style.opacity = '0';
+		if (platform === 'ios') {
+			dialog.style.background = 'rgba(0,0,0, 0)';
+			innerDialog.style['-webkit-transform'] = 'translate3d(0,100%,0)';
+			innerDialog.style[   '-moz-transform'] = 'translate3d(0,100%,0)';
+			innerDialog.style[    '-ms-transform'] = 'translate3d(0,100%,0)';
+			innerDialog.style[     '-o-transform'] = 'translate3d(0,100%,0)';
+			innerDialog.style[        'transform'] = 'translate3d(0,100%,0)';
+		}
+		else {
+			dialog.style.opacity = '0';
+		}
 
 		document.body.appendChild(dialog);
 
 		setTimeout(function () {
-			dialog.style['-webkit-transition'] = 'opacity 0.2s ease-in-out';
-			dialog.style[   '-moz-transition'] = 'opacity 0.2s ease-in-out';
-			dialog.style[    '-ms-transition'] = 'opacity 0.2s ease-in-out';
-			dialog.style[     '-o-transition'] = 'opacity 0.2s ease-in-out';
-			dialog.style[        'transition'] = 'opacity 0.2s ease-in-out';
+			if (platform === 'ios') {
+				dialog.style['-webkit-transition'] = 'background 0.2s ease-in-out';
+				dialog.style[   '-moz-transition'] = 'background 0.2s ease-in-out';
+				dialog.style[    '-ms-transition'] = 'background 0.2s ease-in-out';
+				dialog.style[     '-o-transition'] = 'background 0.2s ease-in-out';
+				dialog.style[        'transition'] = 'background 0.2s ease-in-out';
+				innerDialog.style['-webkit-transition'] = '-webkit-transform 0.2s ease-in-out';
+				innerDialog.style[   '-moz-transition'] =    '-moz-transform 0.2s ease-in-out';
+				innerDialog.style[    '-ms-transition'] =     '-ms-transform 0.2s ease-in-out';
+				innerDialog.style[     '-o-transition'] =      '-o-transform 0.2s ease-in-out';
+				innerDialog.style[        'transition'] =         'transform 0.2s ease-in-out';
+			}
+			else {
+				dialog.style['-webkit-transition'] = 'opacity 0.2s ease-in-out';
+				dialog.style[   '-moz-transition'] = 'opacity 0.2s ease-in-out';
+				dialog.style[    '-ms-transition'] = 'opacity 0.2s ease-in-out';
+				dialog.style[     '-o-transition'] = 'opacity 0.2s ease-in-out';
+				dialog.style[        'transition'] = 'opacity 0.2s ease-in-out';
+			}
 		}, 0);
 
 		setTimeout(function () {
-			dialog.style.opacity = '1';
+			if (platform === 'ios') {
+				dialog.style.background = 'rgba(0,0,0, 0.8)';
+				innerDialog.style['-webkit-transform'] = 'translate3d(0,0,0)';
+				innerDialog.style[   '-moz-transform'] = 'translate3d(0,0,0)';
+				innerDialog.style[    '-ms-transform'] = 'translate3d(0,0,0)';
+				innerDialog.style[     '-o-transform'] = 'translate3d(0,0,0)';
+				innerDialog.style[        'transform'] = 'translate3d(0,0,0)';
+			}
+			else {
+				dialog.style.opacity = '1';
+			}
 		}, 10);
 	}
 

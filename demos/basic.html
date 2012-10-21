@@ -6,80 +6,23 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 	<style>
-		/* Resets */
-
-		html, body, div, form, p, ul, li, span, label, img {
-			margin: 0;
-			padding: 0;
-			outline: none;
-		}
-		html, body {
-			height: 100%;
-			width: 100%;
-		}
-		body {
-			position: relative;
-			font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-			-webkit-font-smoothing: antialiased;
-			-webkit-text-size-adjust: none;
-			text-rendering: optimizeLegibility;
-			-webkit-tap-highlight-color: rgba(0,0,0,0);
-			-webkit-user-select: none;
-			-moz-user-select: none;
-			user-select: none;
-			overflow: hidden;
-		}
-		.app-android {
-			font-family: "Roboto", sans-serif;
-		}
-		.clear {
-			clear: both;
-		}
-
-
-
-		/* Dialogs */
-
-		.app-ios .app-dialog-container {
-			background: rgba(0,0,0,0);
-			-webkit-transition: background 0.3s ease-in-out;
-		}
-		.app-ios .app-dialog-container.active {
-			background: rgba(0,0,0,0.8);
-		}
-		.app-ios .app-dialog {
-			-webkit-transition: -webkit-transform 0.3s ease-in-out;
-			-webkit-transform: translate3d(0,100%,0);
-		}
-		.app-ios .app-dialog-container.active .app-dialog {
-			-webkit-transform: translate3d(0,0,0);
-		}
-
-		.app-dialog .app-button {
-			background: -webkit-linear-gradient(top, #3D3E45, #191A22);
-			color: #FFF;
-		}
-		.app-dialog .app-button.active {
+		.app-button.active {
 			background: -webkit-linear-gradient(top, #15171D, #1D1E25);
 			color: #EEE;
 		}
-		.app-ios .app-dialog .app-button {
-			background: -webkit-linear-gradient(top, #3D3E45, #15171D);
-			box-shadow: inset 0 1px 1px #5C5E63;
-		}
-		.app-ios .app-dialog .app-button.active {
+		.app-ios .app-button.active {
 			background: -webkit-linear-gradient(top, #15171D, #1D1E25);
 			box-shadow: inset 0 1px 2px #070814;
 		}
 	</style>
 </head>
 
-<a href="javascript:;">Open dialog</a><br>
+<button>Open dialog</button><br>
 <span></span>
 
 <script src="../dialog.js"></script>
 <script>
-	var button = document.querySelector('a'),
+	var button = document.querySelector('button'),
 		result = document.querySelector('span');
 
 	button.addEventListener('click', function () {
