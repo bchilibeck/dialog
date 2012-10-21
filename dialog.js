@@ -200,11 +200,11 @@ var Dialog = function (window, document, Clickable) {
 
 			if (options.successButton && options.cancelButton) {
 				successButton.style.width      = '44%';
-				successButton.style.float      = 'right';
+				successButton.style['float']   = 'right';
 				successButton.style.marginLeft = '0';
 
 				cancelButton.style.width       = '44%';
-				cancelButton.style.float       = 'left';
+				cancelButton.style['float']    = 'left';
 				cancelButton.style.marginRight = '0';
 			}
 
