@@ -1,6 +1,6 @@
 /**
  * Dialog.js v1.0.0
- * Modal dialogs for the mobile web
+ * Modal dialogs for mobile web apps
  * Copyright (c) 2012 Kik Interactive, http://kik.com
  * Released under the MIT license
  *
