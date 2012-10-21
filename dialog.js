@@ -1,13 +1,8 @@
-var Clickable=function(q,u,n,l,o){function g(a,h){function e(){a.addEventListener("touchstart",n,!1);a.addEventListener("touchmove",p,!1);a.addEventListener("touchend",o,!1);a.addEventListener("touchcancel",p,!1)}function i(){a.removeEventListener("touchstart",n);a.removeEventListener("touchmove",p);a.removeEventListener("touchend",o);a.removeEventListener("touchcancel",p)}function g(){var b=a,c;c=a.className.replace(w,"");c=String(c).replace(x,"");b.className=c}function j(a,c){do{if(a===c)return!0;
-if(a._clickable)break}while(a=a.parentNode);return!1}function k(b){c=!1;a.disabled||!j(b.target,a)?(b.preventDefault(),f=!1):(f=!0,a.className+=" "+h)}function r(a){a.preventDefault();c=f=!1;g()}function l(b){a.disabled?(b.preventDefault(),c=f=!1):(f?c=!0:(b.preventDefault(),c=!1),f=!1,g())}function n(b){c=!1;if(a.disabled||!j(b.target,a))f=!1;else{f=!0;var d=s=+new Date;setTimeout(function(){f&&d===s&&(a.className+=" "+h)},v)}}function p(){f=c=!1;a.disabled||g()}function o(b){function d(){c=!0;var b=
-u.createEvent("MouseEvents");b.initMouseEvent("click",!0,!0,q,1,0,0,0,0,!1,!1,!1,!1,0,null);a.dispatchEvent(b)}var e=f;p();e&&!a.disabled&&(b.stopImmediatePropagation?+new Date-s>v?d():(a.className+=" "+h,setTimeout(function(){g();d()},1)):c=!0)}function t(b){b=b||q.event;if(!a.disabled&&c)c=!1;else return b.stopImmediatePropagation&&b.stopImmediatePropagation(),b.preventDefault(),b.stopPropagation(),b.cancelBubble=!0,b.returnValue=!1}var d;a:if(a){try{d=a instanceof Node||a instanceof HTMLElement;
-break a}catch(y){}d="object"!==typeof a||"number"!==typeof a.nodeType||"string"!==typeof a.nodeName?!1:!0}else d=!1;if(!d)throw TypeError("element "+a+" must be a DOM element");if(!a._clickable){a._clickable=!0;switch(typeof h){case "undefined":h="active";case "string":break;default:throw TypeError("active class "+h+" must be a string");}a.setAttribute("data-clickable-class",h);var w=RegExp("\\b"+h+"\\b"),f=!1,c=!1,s;if(m.ios||m.android)if(a.style["-webkit-tap-highlight-color"]="rgba(255,255,255,0)",
-a.addEventListener("click",t,!1),m.ios){a.addEventListener("DOMNodeInsertedIntoDocument",e,!1);a.addEventListener("DOMNodeRemovedFromDocument",i,!1);a:{for(d=a;d=d.parentNode;)if(d===u){d=!0;break a}d=!1}d&&e()}else e();else a.addEventListener?(a.addEventListener("mousedown",k,!1),a.addEventListener("mousemove",r,!1),a.addEventListener("mouseout",r,!1),a.addEventListener("mouseup",l,!1),a.addEventListener("click",t,!1)):a.attachEvent&&(a.attachEvent("onmousedown",k),a.attachEvent("onmousemove",r),
-a.attachEvent("onmouseout",r),a.attachEvent("onmouseup",l),a.attachEvent("onclick",t))}}var x=/^\s+|\s+$/g,v=40,m,i=q.navigator.userAgent,e,j,k;if(k=/\bCPU.*OS (\d+(_\d+)?)/i.exec(i))e="ios",j=k[1].replace("_",".");else if(k=/\bAndroid (\d+(\.\d+)?)/.exec(i))e="android",j=k[1];i={name:e,version:j&&q.parseFloat(j)};i[e]=!0;m=i;e=function(){g.apply(this,arguments)};n&&n.plugin("clickable",function(){g.apply(this,arguments)});l&&l.extend(l.fn,{clickable:function(a){this.forEach(function(e){g(e,a)});
-return this}});o&&(o.fn.clickable=function(a){this.each(function(){g(this,a)});return this});e.touchable=function(){return m.ios||m.android};return e}(window,document,window.clik,window.Zepto,window.jQuery);
-
 var Dialog = function (window, document, Clickable) {
-	var dialogQueue, platform, version;
+	var head     = document.querySelector('head'),
+		linkTags = [],
+		dialogQueue,
+		platform, version;
 
 	if (match = /\bCPU.*OS (\d+(_\d+)?)/i.exec(navigator.userAgent)) {
 		platform = 'ios';
@@ -20,6 +15,19 @@ var Dialog = function (window, document, Clickable) {
 
 	function preventDefault (e) {
 		e.preventDefault();
+	}
+
+	function clearLinkTags (timeout) {
+		var tags = linkTags.splice(0);
+
+		setTimeout(function () {
+			tags.forEach(function (tag) {
+				try {
+					head.removeChild(tag);
+				}
+				catch (err) {}
+			});
+		}, timeout || 0);
 	}
 
 	function createButton (callback) {
@@ -41,22 +49,48 @@ var Dialog = function (window, document, Clickable) {
 		button.style.textShadow               = '0 -1px 0 #1C1C1C';
 		button.style.textAlign                = 'center';
 
+		var downState = 'color: #EEE !important;'
+						+ 'background-image: -webkit-gradient(linear, left top, left bottom, from(#15171D), to(#1D1E25)) !important;'
+						+ 'background-image: -webkit-linear-gradient(top, #15171D, #1D1E25) !important;'
+						+ 'background-image: -moz-linear-gradient(top, #15171D, #1D1E25) !important;'
+						+ 'background-image: -ms-linear-gradient(top, #15171D, #1D1E25) !important;'
+						+ 'background-image: -o-linear-gradient(top, #15171D, #1D1E25) !important;'
+						+ 'background-image: linear-gradient(top, #15171D, #1D1E25) !important;';
+
 		if (platform === 'ios') {
-			//TODO: gradient
+			button.style.backgroundImage          = '-webkit-gradient(linear, left top, left bottom, from(#3D3E45), to(#191A22))';
 			button.style.backgroundImage          = '-webkit-linear-gradient(top, #3D3E45, #191A22)';
+			button.style.backgroundImage          = '-moz-linear-gradient(top, #3D3E45, #191A22)';
+			button.style.backgroundImage          = '-ms-linear-gradient(top, #3D3E45, #191A22)';
+			button.style.backgroundImage          = '-o-linear-gradient(top, #3D3E45, #191A22)';
+			button.style.backgroundImage          = 'linear-gradient(top, #3D3E45, #191A22)';
 			button.style['-webkit-box-shadow']    = 'inset 0 1px 1px #5C5E63';
 			button.style[   '-moz-box-shadow']    = 'inset 0 1px 1px #5C5E63';
 			button.style[        'box-shadow']    = 'inset 0 1px 1px #5C5E63';
 			button.style['-webkit-border-radius'] = '6px';
 			button.style[   '-moz-border-radius'] = '6px';
 			button.style[        'border-radius'] = '6px';
+
+			downState += '-webkit-box-shadow: inset 0 1px 2px #070814 !important;'
+						+ '-moz-box-shadow: inset 0 1px 2px #070814 !important;'
+						+ 'box-shadow: inset 0 1px 2px #070814 !important;';
 		}
 		else {
-			//TODO: gradient
+			button.style.backgroundImage = '-webkit-gradient(linear, left top, left bottom, from(#3D3E45), to(#15171D))';
 			button.style.backgroundImage = '-webkit-linear-gradient(top, #3D3E45, #15171D)';
+			button.style.backgroundImage = '-moz-linear-gradient(top, #3D3E45, #15171D)';
+			button.style.backgroundImage = '-ms-linear-gradient(top, #3D3E45, #15171D)';
+			button.style.backgroundImage = '-o-linear-gradient(top, #3D3E45, #15171D)';
+			button.style.backgroundImage = 'linear-gradient(top, #3D3E45, #15171D)';
 		}
 
-		//TODO: downstates
+		button.id = ('x'+Math.random()).replace(/\-|\./g,'');
+		var link = document.createElement('link');
+		link.rel = 'stylesheet';
+		link.href = 'data:text/css,#'+button.id+'.active{'+downState+'}';
+		head.appendChild(link);
+
+		linkTags.push(link);
 
 		Clickable && Clickable(button);
 		button.addEventListener('click', callback, false);
@@ -125,8 +159,12 @@ var Dialog = function (window, document, Clickable) {
 			text.textContent = options.text;
 			text.style.padding         = '12px 32px 0';
 			text.style.margin          = '0';
-			//TODO: gradient
+			text.style.backgroundImage = '-webkit-gradient(linear, left top, left bottom, from(rgba(27,29,34, 0.97)), to(rgba(24,26,31, 0.97)))';
 			text.style.backgroundImage = '-webkit-linear-gradient(top, rgba(27,29,34, 0.97), rgba(24,26,31, 0.97))';
+			text.style.backgroundImage = '-moz-linear-gradient(top, rgba(27,29,34, 0.97), rgba(24,26,31, 0.97))';
+			text.style.backgroundImage = '-ms-linear-gradient(top, rgba(27,29,34, 0.97), rgba(24,26,31, 0.97))';
+			text.style.backgroundImage = '-o-linear-gradient(top, rgba(27,29,34, 0.97), rgba(24,26,31, 0.97))';
+			text.style.backgroundImage = 'linear-gradient(top, rgba(27,29,34, 0.97), rgba(24,26,31, 0.97))';
 			text.style.color           = '#A6A7A9';
 			text.style.fontSize        = '16px';
 			text.style.lineHeight      = '17px';
@@ -138,8 +176,12 @@ var Dialog = function (window, document, Clickable) {
 			var buttons = document.createElement('div');
 			buttons.style.padding = '12px 0';
 			buttons.style.margin  = '0';
-			//TODO: gradient
+			buttons.style.backgroundImage = '-webkit-gradient(linear, left top, left bottom, from(rgba(24,26,31, 0.97)), to(rgba(20,22,28, 0.97)))';
 			buttons.style.backgroundImage = '-webkit-linear-gradient(top, rgba(24,26,31, 0.97), rgba(20,22,28, 0.97))';
+			buttons.style.backgroundImage = '-moz-linear-gradient(top, rgba(24,26,31, 0.97), rgba(20,22,28, 0.97))';
+			buttons.style.backgroundImage = '-ms-linear-gradient(top, rgba(24,26,31, 0.97), rgba(20,22,28, 0.97))';
+			buttons.style.backgroundImage = '-o-linear-gradient(top, rgba(24,26,31, 0.97), rgba(20,22,28, 0.97))';
+			buttons.style.backgroundImage = 'linear-gradient(top, rgba(24,26,31, 0.97), rgba(20,22,28, 0.97))';
 			dialog.appendChild(buttons);
 
 			if (options.successButton) {
@@ -210,6 +252,8 @@ var Dialog = function (window, document, Clickable) {
 			else {
 				dialog.style.opacity = '0';
 			}
+
+			clearLinkTags(600);
 
 			setTimeout(function () {
 				processDialogQueue();
