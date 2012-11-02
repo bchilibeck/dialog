@@ -111,7 +111,9 @@ var Dialog = function (window, document, Clickable) {
 		dialogContainer.style.background = 'rgba(0,0,0, 0.8)';
 		dialogContainer.style.overflow   = 'hidden';
 
-		dialogContainer.addEventListener('touchstart', preventDefault, false);
+		if ((platform !== 'android') || (version >= 4)) {
+			dialogContainer.addEventListener('touchstart', preventDefault, false);
+		}
 
 		var dialog = document.createElement('div');
 		dialog.style.position              = 'absolute';
