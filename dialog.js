@@ -305,21 +305,21 @@ var Dialog = function (window, document, Clickable) {
 				dialog.style[     '-o-transition'] = 'opacity 0.2s ease-in-out';
 				dialog.style[        'transition'] = 'opacity 0.2s ease-in-out';
 			}
-		}, 0);
 
-		setTimeout(function () {
-			if (platform === 'ios') {
-				dialog.style.background = 'rgba(0,0,0, 0.8)';
-				innerDialog.style['-webkit-transform'] = 'translate3d(0,0,0)';
-				innerDialog.style[   '-moz-transform'] = 'translate3d(0,0,0)';
-				innerDialog.style[    '-ms-transform'] = 'translate3d(0,0,0)';
-				innerDialog.style[     '-o-transform'] = 'translate3d(0,0,0)';
-				innerDialog.style[        'transform'] = 'translate3d(0,0,0)';
-			}
-			else {
-				dialog.style.opacity = '1';
-			}
-		}, 10);
+			setTimeout(function () {
+				if (platform === 'ios') {
+					dialog.style.background = 'rgba(0,0,0, 0.8)';
+					innerDialog.style['-webkit-transform'] = 'translate3d(0,0,0)';
+					innerDialog.style[   '-moz-transform'] = 'translate3d(0,0,0)';
+					innerDialog.style[    '-ms-transform'] = 'translate3d(0,0,0)';
+					innerDialog.style[     '-o-transform'] = 'translate3d(0,0,0)';
+					innerDialog.style[        'transform'] = 'translate3d(0,0,0)';
+				}
+				else {
+					dialog.style.opacity = '1';
+				}
+			}, 10);
+		}, 0);
 	}
 
 	function processDialogQueue () {
