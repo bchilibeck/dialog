@@ -1,6 +1,7 @@
 var Dialog = function (window, document, Clickable) {
 	var head     = document.querySelector('head'),
 		linkTags = [],
+		currentCallback,
 		dialogQueue,
 		platform, version;
 
@@ -241,11 +242,15 @@ var Dialog = function (window, document, Clickable) {
 
 		var dialogLock = false;
 
-		var dialog = createDialog(options, function (status) {
+		var dialog = createDialog(options, dialogClosed);
+
+		function dialogClosed (status) {
 			if (dialogLock) {
 				return;
 			}
 			dialogLock = true;
+
+			currentCallback = null;
 
 			if (platform === 'ios') {
 				dialog.style.background = 'rgba(0,0,0, 0)';
@@ -272,7 +277,10 @@ var Dialog = function (window, document, Clickable) {
 				}
 				catch (err) {}
 			}, 600);
-		});
+		}
+
+		currentCallback = dialogClosed;
+
 		var innerDialog = dialog.firstChild;
 
 		if (platform === 'ios') {
@@ -328,6 +336,16 @@ var Dialog = function (window, document, Clickable) {
 		}, 0);
 	}
 
+	function closeDialog () {
+		if (currentCallback) {
+			currentCallback(false);
+		}
+	}
+
+	function hasDialog () {
+		return !!currentCallback;
+	}
+
 	function processDialogQueue () {
 		if ( !dialogQueue ) {
 			return;
@@ -343,7 +361,9 @@ var Dialog = function (window, document, Clickable) {
 		showDialog.apply(window, args);
 	}
 
-	return function (options, callback) {
+
+
+	function Dialog (options, callback) {
 		switch (typeof options) {
 			case 'string':
 				options = { text : options };
@@ -409,5 +429,15 @@ var Dialog = function (window, document, Clickable) {
 		}
 
 		return showDialog(options, callback);
+	}
+
+	Dialog.close = function () {
+		closeDialog();
 	};
+
+	Dialog.status = function () {
+		return hasDialog();
+	};
+
+	return Dialog;
 }(window, document, window.Clickable);
