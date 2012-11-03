@@ -111,6 +111,10 @@ var Dialog = function (window, document, Clickable) {
 		dialogContainer.style.background = 'rgba(0,0,0, 0.8)';
 		dialogContainer.style.overflow   = 'hidden';
 
+		if ((platform === 'ios') && (version <= 5)) {
+			dialogContainer.style.position = 'absolute';
+		}
+
 		if ((platform !== 'android') || (version >= 4)) {
 			dialogContainer.addEventListener('touchstart', preventDefault, false);
 		}
@@ -309,11 +313,13 @@ var Dialog = function (window, document, Clickable) {
 			setTimeout(function () {
 				if (platform === 'ios') {
 					dialog.style.background = 'rgba(0,0,0, 0.8)';
-					innerDialog.style['-webkit-transform'] = 'translate3d(0,0,0)';
-					innerDialog.style[   '-moz-transform'] = 'translate3d(0,0,0)';
-					innerDialog.style[    '-ms-transform'] = 'translate3d(0,0,0)';
-					innerDialog.style[     '-o-transform'] = 'translate3d(0,0,0)';
-					innerDialog.style[        'transform'] = 'translate3d(0,0,0)';
+					setTimeout(function () {
+						innerDialog.style['-webkit-transform'] = 'translate3d(0,0,0)';
+						innerDialog.style[   '-moz-transform'] = 'translate3d(0,0,0)';
+						innerDialog.style[    '-ms-transform'] = 'translate3d(0,0,0)';
+						innerDialog.style[     '-o-transform'] = 'translate3d(0,0,0)';
+						innerDialog.style[        'transform'] = 'translate3d(0,0,0)';
+					}, 50);
 				}
 				else {
 					dialog.style.opacity = '1';
