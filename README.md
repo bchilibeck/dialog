@@ -5,7 +5,7 @@ window.alert & window.confirm are ugly non-customizable. They are also blocking 
 
 Dialog.js tries to solve this with a HTML-based dialog with customizable buttons and text. It's simple, easy to use, and lightweight.
 
-Dialog.js will work on its own without any dependencies, but if you drop in [clickable.js](https://github.com/kikinteractive/clickable) buttons will automatically perform better and will get native-like downstates.
+Dialog.js will work on its own without any dependencies, but if you include [clickable.js](https://github.com/kikinteractive/clickable) before it buttons will automatically perform better and will get native-like downstates.
 
 
 Links
